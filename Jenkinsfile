@@ -20,11 +20,16 @@ pipeline {
             }
         }
 
-        stage('Integration Testing') {
+        stage('Unit Test') {
             steps {
-                sh "sleep ${params.SLEEP_TIMER}"
-                sh """ curl -s http://localhost:${params.APPLICATION_PORT}/hello | grep -i "Hello, KodeKloud community!" """
+                echo 'Running unit tests...'
+                sh "mvn test"
             }
-        }   
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
     }
 }
